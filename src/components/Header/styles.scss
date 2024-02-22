@@ -1,0 +1,42 @@
+header {
+  display: flex;
+  height: var(--header-height);
+  align-items: center;
+
+  .sec-1 {
+    flex: 0.5;
+    margin: 0 10px;
+    h1 {
+      margin: 0;
+    }
+  }
+  .sec-2 {
+    flex: 0.5;
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  header {
+    display: flex;
+    width: 100%;
+    .sec-1 {
+      display: flex;
+      flex: 0.9;
+      width: 100%;
+      margin: 0;
+
+      h1 {
+        width: 100%;
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    .sec-2 {
+      flex: 0.1;
+    }
+  }
+}
