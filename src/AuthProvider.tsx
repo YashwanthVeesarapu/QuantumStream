@@ -9,6 +9,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   const loginAction = async (data: any) => {
+    setLoading(true);
     try {
       const response = await apiInstance.post("/auth/login", data);
       const res = await response.data;
@@ -17,11 +18,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(res.token);
         localStorage.setItem("user", res.user);
         localStorage.setItem("site", res.token);
-        alert("Login Success");
+        apiInstance.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${res.token}`;
+        setLoading(false);
         return;
       }
       // throw new Error(res.message);
     } catch (err) {
+      setLoading(false);
       alert("Login Failed");
     }
   };
@@ -39,7 +44,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const token = localStorage.getItem("site");
     if (token) {
       const payload = JSON.parse(atob(token.split(".")[1]));
-      if (payload.exp >= Date.now() / 1000) {
+      // Check if token is in less than 24 hours
+      if (payload.exp >= Date.now() / 1000 - 86400) {
         apiInstance.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${token}`;
@@ -55,7 +61,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       {loading ? (
-        <div>Loading...</div>
+        <div className="loading">Authenticating...</div>
       ) : (
         <AuthContext.Provider
           value={{ user, token, logout, loginAction, loading }}

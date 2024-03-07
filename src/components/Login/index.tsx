@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../../AuthProvider";
 
 import "./styles.scss";
+import Button from "../Button";
 
 type Auth = {
   loginAction: (data: any) => void;
@@ -21,21 +22,29 @@ const Login = () => {
     auth.loginAction({ username, password });
   };
 
+  const handleKeyPress = (e: any) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+  document.addEventListener("keypress", handleKeyPress);
+
   return (
     <div className="login">
-      <h1>Login</h1>
       <div className="login-form">
         <input
+          name="username"
           type="text"
           placeholder="Username"
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
+          name="password"
           type="password"
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={handleLogin}>Login</button>
+        <Button onClick={handleLogin}>Login</Button>
       </div>
     </div>
   );

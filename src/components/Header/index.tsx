@@ -1,5 +1,6 @@
 import "./styles.scss";
 import { useAuth } from "../../AuthProvider";
+import Button from "../Button";
 
 type Auth = {
   logout: () => void;
@@ -15,7 +16,7 @@ const Header = () => {
         <h1>Quantum Stream</h1>
       </div>
       <div className="sec-2">
-        {auth.user && <button onClick={() => auth.logout()}>Logout</button>}
+        {auth.user && <Button onClick={() => auth.logout()}>Logout</Button>}
       </div>
     </header>
   );
