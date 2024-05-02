@@ -6,6 +6,7 @@ export interface SeriesModel {
   thumbnail: string;
   description: string;
   numberOfSeasons: number;
+  rating: string;
   seasons: {
     seasonNumber: number;
     episodes: {

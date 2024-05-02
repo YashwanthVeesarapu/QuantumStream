@@ -2,6 +2,7 @@ import { useRef } from "react";
 // import { apiInstance } from "../../lib/config";
 import "./styles.scss";
 import { SeriesModel } from "../../models/series.model";
+import { apiInstance } from "../../lib/config";
 
 const Series = ({ data }: { data: SeriesModel }) => {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -16,17 +17,24 @@ const Series = ({ data }: { data: SeriesModel }) => {
     }
   }
 
-  const showVideo = (episode: {
+  const showVideo = async (episode: {
     title: string;
     video: string;
     description: string;
     duration: string;
   }) => {
+    const response = await apiInstance.get(`/video?path=${episode.video}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("site")}`,
+      },
+    });
+
     if (ref.current) {
       ref.current.className = "video-player-full";
     }
     if (videoRef.current) {
-      videoRef.current.src = episode.video;
+      videoRef.current.src = response.data.url;
 
       if (window.innerWidth < 768) {
         videoRef.current.play();
@@ -50,6 +58,7 @@ const Series = ({ data }: { data: SeriesModel }) => {
           <h2>{data.name}</h2>
           <p>{data.description}</p>
           <p>{data.language}</p>
+          <p>IMDb Rating: {data.rating}</p>
         </div>
         <div className="seasons-container">
           {data.seasons.map((season) => {
@@ -93,7 +102,7 @@ const Series = ({ data }: { data: SeriesModel }) => {
           controls
           preload="metadata"
           poster={data.thumbnail}
-          controlsList="nodownload"
+          // controlsList="nodownload"
           playsInline
         >
           <source />

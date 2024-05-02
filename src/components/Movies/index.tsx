@@ -1,8 +1,10 @@
 import { useRef } from "react";
 import "./styles.scss";
 import { Video } from "../../models/video.model";
+import { apiInstance } from "../../lib/config";
 
-const Movies = ({ data }: { data: Video }) => {
+const Movies = ({ data, close }: { data: Video; close: () => void }) => {
+  console.log(data);
   const ref = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -14,15 +16,23 @@ const Movies = ({ data }: { data: Video }) => {
       videoRef.current.pause();
       localStorage.setItem(data._id, videoRef.current.currentTime.toString());
     }
+    close();
   }
 
-  const showVideo = (video: string) => {
+  const showVideo = async () => {
+    const response = await apiInstance.get(`/video?path=${data.video}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("site")}`,
+      },
+    });
+    console.log(response);
     if (ref.current) {
       ref.current.className = "video-player-full";
     }
 
     if (videoRef.current) {
-      videoRef.current.src = video;
+      videoRef.current.src = response.data.url;
       videoRef.current.currentTime = parseFloat(
         localStorage.getItem(data._id) || "0"
       );
@@ -39,17 +49,14 @@ const Movies = ({ data }: { data: Video }) => {
       }
     }
   };
+
   return (
     <>
       <div className="video-details">
         <div className="video-img">
           <img src={data.thumbnail} alt={data.name} />
         </div>
-        <div
-          id="play-btn"
-          className="play-button"
-          onClick={() => showVideo(data.video)}
-        >
+        <div id="play-btn" className="play-button" onClick={() => showVideo()}>
           <svg
             className="svg-icon"
             viewBox="0 0 1024 1024"
@@ -63,6 +70,7 @@ const Movies = ({ data }: { data: Video }) => {
           <h2>{data.name}</h2>
           <p>{data.description}</p>
           <p>{data.language}</p>
+          <p>IMDb Rating: {data.rating}</p>
         </div>
       </div>
 

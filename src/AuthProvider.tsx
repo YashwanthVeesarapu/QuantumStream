@@ -25,9 +25,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
       // throw new Error(res.message);
-    } catch (err) {
+    } catch (err: any) {
       setLoading(false);
-      alert("Login Failed");
+      console.log(err);
+      alert(err.response.data.message || "Login failed");
     }
   };
 

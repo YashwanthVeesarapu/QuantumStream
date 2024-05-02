@@ -45,7 +45,7 @@ const Card = ({
         </div>
       </div>
       <div ref={playAreaRef} className="play-area">
-        {movieData && <Movies data={movieData} />}
+        {movieData && <Movies data={movieData} close={closePlayArea} />}
         {seriesData && <Series data={seriesData} />}
         <button className="playarea-close" onClick={closePlayArea}>
           <svg

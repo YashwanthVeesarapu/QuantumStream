@@ -6,7 +6,9 @@ if (window.location.hostname === "localhost") {
   dev = true;
 }
 
-const serverUrl = dev ? "http://localhost:8000" : "https://api.redsols.us";
+// dev = false;
+
+const serverUrl = dev ? "http://127.0.0.1:8080" : "https://api.redsols.us";
 
 export const apiInstance = axios.create({
   baseURL: serverUrl,
