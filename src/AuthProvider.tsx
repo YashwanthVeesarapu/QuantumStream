@@ -10,26 +10,26 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const loginAction = async (data: any) => {
     setLoading(true);
-    try {
-      const response = await apiInstance.post("/auth/login", data);
-      const res = await response.data;
-      if (res.user && res.token) {
-        setUser(res.user);
-        setToken(res.token);
-        localStorage.setItem("user", res.user);
-        localStorage.setItem("site", res.token);
-        apiInstance.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${res.token}`;
+    apiInstance
+      .post("/auth/login", data)
+      .then((response) => {
+        const res = response.data;
+        if (res.user && res.token) {
+          setUser(res.user);
+          setToken(res.token);
+          localStorage.setItem("user", res.user);
+          localStorage.setItem("site", res.token);
+          apiInstance.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${res.token}`;
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
         setLoading(false);
-        return;
-      }
-      // throw new Error(res.message);
-    } catch (err: any) {
-      setLoading(false);
-      console.log(err);
-      alert(err.response.data.message || "Login failed");
-    }
+        console.log(err);
+        alert(err.response.data.message || "Login failed");
+      });
   };
 
   const logout = () => {

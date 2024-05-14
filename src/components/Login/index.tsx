@@ -9,17 +9,17 @@ type Auth = {
 };
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const auth = useAuth() as Auth;
 
   const handleLogin = () => {
-    if (username.trim() === "" || password.trim() === "") {
+    if (email.trim() === "" || password.trim() === "") {
       alert("Please fill all the fields");
       return;
     }
-    auth.loginAction({ username, password });
+    auth.loginAction({ username: email, password });
   };
 
   const handleKeyPress = (e: any) => {
@@ -33,10 +33,10 @@ const Login = () => {
     <div className="login">
       <div className="login-form">
         <input
-          name="username"
+          name="email"
           type="text"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           name="password"

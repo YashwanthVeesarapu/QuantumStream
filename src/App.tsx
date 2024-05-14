@@ -12,11 +12,11 @@ function App() {
   const auth = useAuth() as Auth;
 
   return (
-    <>
+    <div className="app">
       <Header />
       {!auth.user && <Login />}
       {auth.user && !auth.loading && <Home />}
-    </>
+    </div>
   );
 }
 
