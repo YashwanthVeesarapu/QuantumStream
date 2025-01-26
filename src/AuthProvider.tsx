@@ -14,14 +14,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .post("/auth/login", data)
       .then((response) => {
         const res = response.data;
-        if (res.user && res.token) {
-          setUser(res.user);
-          setToken(res.token);
-          localStorage.setItem("user", res.user);
-          localStorage.setItem("site", res.token);
+        if (res.token) {
+          let newToken = res.token;
+          let payload = JSON.parse(atob(newToken.split(".")[1]));
+
+          setUser(payload.user);
+          setToken(newToken);
+
+          localStorage.setItem("user", payload.user);
+          localStorage.setItem("site", newToken);
           apiInstance.defaults.headers.common[
             "Authorization"
-          ] = `Bearer ${res.token}`;
+          ] = `Bearer ${newToken}`;
           setLoading(false);
         }
       })
@@ -43,6 +47,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     setLoading(true);
     const token = localStorage.getItem("site");
+
     if (token) {
       const payload = JSON.parse(atob(token.split(".")[1]));
       // Check if token is in less than 24 hours
